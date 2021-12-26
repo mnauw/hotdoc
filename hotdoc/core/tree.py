@@ -362,6 +362,8 @@ class Page:
 
         symbol.link.ref = "%s#%s" % (page_path, symbol.unique_name)
 
+        # FIXME alternatively also expliticly resolve alias links here ??
+
         for link in symbol.get_extra_links():
             link.ref = "%s#%s" % (page_path, link.id_)
 
