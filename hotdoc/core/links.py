@@ -20,7 +20,7 @@
 Banana banana
 """
 import urllib.parse
-from hotdoc.utils.loggable import Logger, warn
+from hotdoc.utils.loggable import Logger, warn, debug
 from hotdoc.core.exceptions import MissingLinkException
 Logger.register_warning_code('mandatory-link-not-found', MissingLinkException,
                              domain='links')
@@ -129,22 +129,27 @@ class LinkResolver:
         return self.__get_named_link(name)
 
     def __get_named_link(self, name, recursed=False):
+        debug('get named link %s' % (name, ), 'links')
         url_components = urllib.parse.urlparse(name)
         if bool(url_components.netloc):
             return Link(name, None, name)
 
         if name in self.__links:
-            return self.__links[name]
+            link = self.__links[name]
+            debug('got local link %s %s' % (name, link), 'links')
+            return link
 
         sym = self.__doc_db.get_symbol(name)
         if sym and sym.link:
             self.__links[name] = sym.link
+            debug('got db link %s %s' % (name, sym.link), 'links')
             return sym.link
 
         lazy_loaded = self.get_link_signal(self, name)
         lazy_loaded = [elem for elem in lazy_loaded if elem is not None]
         if lazy_loaded:
             link = lazy_loaded[0]
+            debug('lazy load %s %s' % (name, link), 'links')
             self.__links[name] = link
             link.id_ = name
             return link
@@ -172,6 +177,7 @@ class LinkResolver:
         """
         Banana banana
         """
+        debug('upsert link %s' % (link, ), 'links')
         elink = self.__links.get(link.id_)
 
         if elink:
