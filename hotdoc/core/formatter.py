@@ -956,6 +956,7 @@ class Formatter(Configurable):
 
     def _format_symbol(self, symbol):
         self.__update_children_symbols(symbol)
+        # NOTE comment formatted even though may not be used by handler/template
         symbol.formatted_doc = self.format_comment(
             symbol.comment, self.extension.app.link_resolver)
 
