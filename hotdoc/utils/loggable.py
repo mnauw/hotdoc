@@ -241,6 +241,9 @@ class Logger(Configurable):
         `Logger.raise_on_fatal_warnings` as well.
         """
 
+        # import traceback
+        # debug('log warn %s\n' % (''.join(traceback.format_stack())), 'log')
+
         if code in Logger._ignored_codes:
             return
 
